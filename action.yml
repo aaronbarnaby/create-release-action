@@ -1,4 +1,4 @@
-name: 'Create Release'
+name: 'Create Release Action'
 author: 'aaronbarnaby'
 description: 'Handle the GitHub release process during your workflow with full changelog and asset uploads.'
 inputs:
