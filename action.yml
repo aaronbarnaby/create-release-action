@@ -1,0 +1,35 @@
+name: 'Create Release'
+author: 'aaronbarnaby'
+description: 'Handle the GitHub release process during your workflow with full changelog and asset uploads.'
+inputs:
+  api_token:
+    description: 'GitHub secret token'
+    required: true
+  release_tag:
+    description: 'Git Tag (for auto releases)'
+    required: false
+  compare_last_tagged_release:
+    description: 'Instead of comparing to provided release_tag it will search for latest tagged release to compare too'
+    required: false
+    default: true
+  prerelease:
+    description: 'Should this release be marked as a pre-release?'
+    required: false
+    default: true
+  title:
+    description: 'Release title (for auto releases)'
+    required: false
+  files:
+    description: 'Assets to upload to the release'
+    required: false
+outputs:
+  release_tag:
+    description: 'The tag this action just processed'
+  upload_url:
+    description: 'The URL for uploading additional assets to the release'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'git-merge'
+  color: 'red'
