@@ -37,17 +37,17 @@ type ParsedCommitsExtra = {
 };
 
 enum ConventionalCommitTypes {
-  feat = 'Features',
-  fix = 'Bug Fixes',
-  docs = 'Documentation',
-  style = 'Styles',
-  refactor = 'Code Refactoring',
-  perf = 'Performance Improvements',
-  test = 'Tests',
-  build = 'Builds',
-  ci = 'Continuous Integration',
-  chore = 'Chores',
-  revert = 'Reverts',
+  feat = '✨ Features',
+  fix = '🐛 Bug Fixes ',
+  docs = '📝 Documentation',
+  style = '🎨 Styles',
+  refactor = '♻️ Code Refactoring',
+  perf = '🚀 Performance Improvements',
+  test = '✅ Tests',
+  build = '👷 Builds',
+  ci = '💚 Continuous Integration',
+  chore = '🔨 Chores',
+  revert = '⏪️ Reverts',
 }
 
 export type ParsedCommits = {
@@ -114,7 +114,7 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
     .map((val) => getFormattedChangelogEntry(val))
     .reduce((acc, line) => `${acc}\n${line}`, '');
   if (breaking) {
-    changelog += '## Breaking Changes\n';
+    changelog += '## 💥💥 Breaking Changes 💥💥\n';
     changelog += breaking.trim();
   }
 
