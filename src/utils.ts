@@ -185,8 +185,14 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
 
   // Contributors
   let contributors: Contributor[] = [];
-  parsedCommits.forEach((commit) => {
-    const author = commit.extra.commit.author;
+  for (const commit of parsedCommits) {
+    let author = commit.extra.commit.author ?? commit.extra.commit.committer;
+
+    // no author... skip
+    if (author === null) {
+      continue;
+    }
+
     let authorItem = {
       login: author.login,
       name: author.name,
@@ -197,7 +203,7 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
     if (contributors.find((val) => val.login !== authorItem.login)) {
       contributors.push(authorItem);
     }
-  });
+  }
 
   if (contributors.length > 0) {
     changelog += '\n\n## Contributors\n';
