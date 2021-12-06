@@ -36,6 +36,8 @@ type ParsedCommitsExtra = {
   breakingChange: boolean;
 };
 
+type Contributor = { login: string; name: string; url: string; avatar: string };
+
 enum ConventionalCommitTypes {
   feat = '✨ Features',
   fix = '🐛 Bug Fixes ',
@@ -105,6 +107,48 @@ const getFormattedChangelogEntry = (parsedCommit: ParsedCommits): string => {
   return entry;
 };
 
+const getRenderedContributors = (contributors: Contributor[], style: 'table' | 'list'): string => {
+  let content = '';
+
+  if (style === 'table') {
+    content = '<table>\n';
+
+    const columns = 5;
+    const rows = Math.ceil(contributors.length / columns);
+
+    for (let row = 1; row <= rows; row++) {
+      content += '<tr>';
+
+      for (let column = 1; column <= columns && (row - 1) * columns + column - 1 < contributors.length; column++) {
+        const contributor = contributors[(row - 1) * columns + column - 1];
+
+        content += `<td align="center">
+          <a href="https://github.com/${contributor.login}">
+              <img src="${contributor.avatar}" width="150px;" alt="${contributor.login}"/>
+              <br />
+              <sub><b>${contributor.name ? contributor.name : contributor.login}</b></sub>
+          </a>
+        </td>`;
+      }
+
+      content += '</tr>\n';
+    }
+    content += '</table>';
+  } else if (style === 'list') {
+    content += '<ul class="list-style-none d-flex flex-wrap mb-n2">\n';
+    for (const contributor of contributors) {
+      content += `<li class="mb-2 mr-2">
+        <a href="https://github.com/${contributor.login}" data-hovercard-type="user" data-hovercard-url="/users/${contributor.login}/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
+          <img src="${contributor.avatar}" size="32" height="32" width="32" class="avatar circle" alt="@${contributor.login}" />
+        </a>
+      </li>`;
+    }
+    content += '</ul>';
+  }
+
+  return content;
+};
+
 export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[]): string => {
   let changelog = '';
 
@@ -137,6 +181,27 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
   if (commits) {
     changelog += '\n\n## Commits\n';
     changelog += commits.trim();
+  }
+
+  // Contributors
+  let contributors: Contributor[] = [];
+  parsedCommits.forEach((commit) => {
+    const author = commit.extra.commit.author;
+    let authorItem = {
+      login: author.login,
+      name: author.name,
+      url: author.url,
+      avatar: author.avatar_url,
+    };
+
+    if (contributors.find((val) => val.login !== authorItem.login)) {
+      contributors.push(authorItem);
+    }
+  });
+
+  if (contributors.length > 0) {
+    changelog += '\n\n## Contributors\n';
+    changelog += getRenderedContributors(contributors, 'list');
   }
 
   return changelog.trim();
