@@ -184,9 +184,13 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
   }
 
   // Contributors
+  core.info('Loading Contributors');
   let contributors: Contributor[] = [];
   for (const commit of parsedCommits) {
     let author = commit.extra.commit.author ?? commit.extra.commit.committer;
+
+    core.info(`Processing commit ${JSON.stringify(commit)}`);
+    core.info(`author: ${JSON.stringify(author)}`);
 
     // no author... skip
     if (author === null) {
@@ -205,6 +209,7 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
     }
   }
 
+  core.info(contributors.length + ' Contributors Found');
   if (contributors.length > 0) {
     changelog += '\n\n## Contributors\n';
     changelog += getRenderedContributors(contributors, 'list');
