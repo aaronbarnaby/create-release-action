@@ -184,9 +184,11 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
   }
 
   // Contributors
+  core.info('Checking Contributors');
   let contributors: Contributor[] = [];
   for (const commit of parsedCommits) {
     let author = commit.extra.commit.author ?? commit.extra.commit.committer;
+    core.info(`Contributor: ${JSON.stringify(author)}`);
 
     // no author... skip
     if (author === null) {
@@ -200,7 +202,8 @@ export const generateChangelogFromParsedCommits = (parsedCommits: ParsedCommits[
       avatar: author.avatar_url,
     };
 
-    if (contributors.some((val) => val.login !== authorItem.login)) {
+    var index = contributors.findIndex((x) => x.login === authorItem.login);
+    if (index < 0) {
       contributors.push(authorItem);
     }
   }

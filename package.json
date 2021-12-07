@@ -1,8 +1,8 @@
 {
-  "name": "automatic-releases",
-  "version": "1.2.1",
+  "name": "create-release-action",
+  "version": "0.4.3",
   "private": true,
-  "description": "Generate automatic releases whenever changes land on master",
+  "description": "Github Action to auto create/update releases with full change logs",
   "main": "dist/index.js",
   "license": "MIT",
   "config": {
